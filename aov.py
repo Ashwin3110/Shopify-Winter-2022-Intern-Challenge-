@@ -13,41 +13,41 @@ dataset.describe()
 
 dataset.info()
 
+#box plot - order amount
 sns.boxplot(data=dataset.order_amount, orient="h").set_title('order amount')
 
+#box plot - total item
 sns.boxplot(data=dataset.total_items, orient="h").set_title('total item')
 
+#record with total items greater than mean (i.e) 8
+totlitem = dataset[dataset['total_items']>8]
+print(totlitem.shape)
 
+#record with order anount greater than mean (i.e) 3145.13
+ordeamount = dataset[dataset['order_amount']>3145.13]
+print(ordeamount.shape)
+
+#price of one shoe in each shop
 dataset['priceperitem'] = dataset['order_amount']/dataset['total_items']
 
 dataset.describe()
 
-z = dataset[dataset['total_items']>100]
-print(z.shape)
+#record with price per shoe greater than mean (i.e) 387.74
+ppitem = dataset[dataset['priceperitem']>387.74]
+print(ppitem.shape)
 
-sns.boxplot(data=dataset.priceperitem, orient="h").set_title('price per item')
 
-#shop no 78 is the only shop which sells show at high rate
-a = dataset[(dataset['priceperitem']>388) &( dataset['total_items'] < 10)]
-print(a.shape)
-print(a)
+#as we see ppitem record all the records are with shop_id = 78
+#it is given that price of shoe is relatively affordable 
+#But the shoe which is sold by shop 78 it is very high when compared to other shoes for other shops
 
-index = dataset[(dataset['priceperitem']>388)].index.values
+#so i dropped all the data  from shop 78
+final_data = dataset.drop(labels=dataset[dataset['shop_id']==78].index, axis=0)
 
-df  = dataset.drop(index,axis=0).reset_index(drop=True)
+final_data.describe()
+final_data['order_amount'].describe()
+#final aov - $2717.36
 
-df['order_amount'].describe()
-
-dataset['priceperitem'].unique()
-
-p112 = dataset[dataset['priceperitem'] == 112]
-
-s7 = dataset[dataset['shop_id'] == 53]
-
-df2 = dataset.groupby(['shop_id']).agg({'order_amount': ['mean','sum']})
-df2.columns = ['mean','sum']
-
-df2.describe()
 
 
 
